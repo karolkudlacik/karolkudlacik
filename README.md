@@ -13,7 +13,7 @@ Focused on applying machine learning and time series forecasting to quantitative
 - **Approach:** Built and compared five classification models — Logistic Regression, SVM, Decision Tree, Random Forest, and a Neural Network. The preprocessing pipeline included one-hot encoding of categorical features, StandardScaler normalization (applied separately to train/test to prevent data leakage), and SMOTETomek resampling to address class imbalance. Hyperparameter tuning was performed via RandomizedSearchCV for traditional models and manual grid search for the neural network. Models were evaluated using Precision, F1-score, and AUC-ROC.
 - **Result:** Logistic Regression and SVM achieved near-perfect classification with AUC-ROC scores close to 1.0. Decision Tree and Random Forest performed well but were sensitive to hyperparameter choices. The Neural Network, despite architectural improvements (BatchNormalization, Dropout, L2 regularization), was outperformed by the simpler traditional models — confirming that for structured tabular data, classical ML approaches can be more effective.
 - **Tech:** Python, TensorFlow/Keras, Scikit-learn, Imbalanced-learn (SMOTETomek), Pandas, NumPy, Matplotlib, Seaborn
-- **Repository:** [View Project](#)
+- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_card_project.ipynb)
 
 
 ---
