@@ -1,6 +1,6 @@
 # Karol Kudlacik
 
-**Mathematician | Machine Learning Engineer | Financial Data Scientist**
+**Mathematician**
 
 Focused on applying machine learning and time series forecasting to quantitative finance and financial technology problems.
 
