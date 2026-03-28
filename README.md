@@ -1,4 +1,4 @@
-# Karol Kudlacik
+# Karol Kudłacik
 
 **Mathematician**
 
