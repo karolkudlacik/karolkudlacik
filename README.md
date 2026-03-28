@@ -47,5 +47,5 @@ Focused on applying machine learning and time series forecasting to quantitative
 ## 📬 Connect
 
 📧 Email: karol.kudlacik@outlook.com
-🔗 LinkedIn: 
+🔗 LinkedIn: www.linkedin.com/in/karol-kudłacik-56abb13b9
 🐙 GitHub: https://github.com/karolkudlacik/karolkudlacik
