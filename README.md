@@ -53,11 +53,11 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 
 **Languages:** Python, R
 
-**ML & Data Science:** TensorFlow/Keras, Scikit-learn, Imbalanced-learn, Pandas, NumPy, Matplotlib, Seaborn
+**ML & Data Science:** Scikit-learn, Imbalanced-learn, Pandas, NumPy, Matplotlib, Seaborn, scorecardpy
 
 **R packages:** astsa, tseries, forecast, zoo, dplyr, bestNormalize
 
-**Finance & Quantitative:** Market risk (VaR, Expected Shortfall), Basel III / FRTB backtesting, credit risk modelling, time-series analysis, statistical analysis
+**Finance & Quantitative:** Market risk (VaR, Expected Shortfall), Basel III / FRTB backtesting, PD, credit risk modelling, time-series analysis, statistical analysis
 
 ---
 
