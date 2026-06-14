@@ -18,6 +18,16 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/SP500_analysis.html)
 - **Data:** [S&P 500 daily prices — Stooq](https://stooq.pl/q/d/l/?s=^spx&f=19900501&t=20260327&i=d)
 
+### 🎲 Options Wheel vs. Buy & Hold – Monte Carlo Strategy Comparison
+
+- **Problem:** Compare a systematic options-selling strategy (the "Wheel") against passive Buy & Hold on an ETF, and quantify how each behaves on return, risk and stability across different market regimes — i.e. whether harvesting option premium delivers a better risk-adjusted payoff than simply holding. Presented at the 14th Cracow Conference of Financial Mathematics (2026).
+- **Approach:** Built a Monte Carlo engine simulating 10,000 GBM price paths in each of three regimes (bull μ=15% / σ=12%, bear μ=−20% / σ=35%, sideways μ=3% / σ=18%), $100k capital, r=4%. The Wheel agent systematically sells cash-secured puts then covered calls at the 0.30-delta strike (21-day tenor), priced with Black–Scholes; implied volatility is set to realized + 2% to capture the volatility risk premium (VRP), and covered-call strikes are floored at the assignment price to protect the cost basis. Performance measured with CAGR, annualized Sharpe, average maximum drawdown, CVaR (95%) and the path-by-path probability P(Wheel > B&H).
+- **Result:** Buy & Hold won nominally only in the strong bull market (CAGR 15.8% vs 11.0%) — the Wheel caps upside — but with a worse risk profile (Sharpe 0.74 vs 1.19, deeper drawdowns). The Wheel outperformed in the bear (P = 87%) and sideways (P = 71%) regimes and showed consistently lighter left tails (better CVaR) across all three. In short, it acts as a volatility-management overlay: a more defensive, predictable payoff in exchange for capped upside, with the VRP as the structural source of edge.
+- **Limitations:** GBM has no fat tails, so crash / black-swan risk is understated; transaction costs are omitted, which favours the higher-turnover Wheel; perfect liquidity at Black–Scholes + VRP is assumed; and the edge is sensitive to the flat +2% VRP, which in reality varies and can turn negative in stress.
+- **Tech:** [uzupełnij — np. Python: NumPy, pandas, SciPy, Matplotlib]
+- **Repository:** [View Presentation (PDF)](https://github.com/karolkudlacik/karolkudlacik/blob/main/Options_strategy_wheel_vs_Buy_paper_from_kkmf.pdf)
+- **Data:** Synthetic (Monte Carlo / GBM simulation)
+
 ### 🏦 Corporate Credit Risk – Probability of Default (PD)
 
 - **Problem:** Estimate the 12-month probability of default for a Middle-Market Wholesale corporate book and decide which modelling approach a risk function should actually deploy. The predictors here are not raw financials but six qualitative credit-expert opinion scores (market position, management quality, access to credit, profitability, short- and medium-term liquidity), recorded across several years per customer — a panel structure that makes naive row-level train/test splitting unsafe.
