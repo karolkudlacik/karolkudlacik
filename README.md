@@ -1,51 +1,68 @@
 # Karol Kudłacik
 
-**Mathematician**
+Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 
-Focused on applying machine learning and time series forecasting to quantitative finance and financial technology problems.
+*Applying quantitative methods and machine learning to market risk, model validation and financial forecasting.*
 
 ---
 
 ## 📊 Featured Projects
 
-### 📈 Credit Card Approval Prediction
-- **Problem:** Financial institutions face challenges in automating credit card approval decisions while balancing two competing goals: minimizing risk by rejecting unreliable applicants, and maximizing profit by not turning away creditworthy ones. The dataset was highly imbalanced (~99.5% approvals), making standard classification approaches insufficient.
-- **Approach:** Built and compared five classification models — Logistic Regression, SVM, Decision Tree, Random Forest, and a Neural Network. The preprocessing pipeline included one-hot encoding of categorical features, StandardScaler normalization (applied separately to train/test to prevent data leakage), and SMOTETomek resampling to address class imbalance. Hyperparameter tuning was performed via RandomizedSearchCV for traditional models and manual grid search for the neural network. Models were evaluated using Precision, F1-score, and AUC-ROC.
-- **Result:** Logistic Regression and SVM achieved near-perfect classification with AUC-ROC scores close to 1.0. Decision Tree and Random Forest performed well but were sensitive to hyperparameter choices. The Neural Network, despite architectural improvements (BatchNormalization, Dropout, L2 regularization), was outperformed by the simpler traditional models — confirming that for structured tabular data, classical ML approaches can be more effective.
-- **Tech:** Python, TensorFlow/Keras, Scikit-learn, Imbalanced-learn (SMOTETomek), Pandas, NumPy, Matplotlib, Seaborn
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_card_project.ipynb)
-- **Data:**[kaggle](https://www.kaggle.com/datasets/caesarmario/application-data)
-### 📈 Time Series – Monthly Sales Forecasting
-
-- **Problem:** Given monthly product sales data spanning from 2015, the goal was to analyze the underlying temporal structure of the series and produce reliable sales forecasts for all 9 months of the first three quarters of 2026.
-- **Approach:** The raw series was tested for stationarity using the Augmented Dickey-Fuller test (p = 0.84 → non-stationary), then first-differenced to achieve stationarity (p = 0.01). ACF/PACF plots of the differenced series suggested an AR process, guiding model selection. A periodogram and smoothed spectral density estimator (Daniell kernel) were computed to identify dominant cycles — a strong peak was found around a ~16-month period. Four ARIMA candidates were fitted and compared — ARIMA(1,1,0), ARIMA(1,2,0), ARIMA(2,1,0), and ARIMA(2,2,0) — with model selection based on AIC/BIC and residual diagnostics. ARIMA(2,1,0) was chosen as the best model, avoiding over-differencing while achieving the lowest information criteria.
-- **Result:** The ARIMA(2,1,0) model produced a 9-month forecast for Jan–Sep 2026, revealing a continuing gradual decline in sales (from ~1582 in January to ~1432 in September), with widening prediction intervals reflecting growing uncertainty further into the future.
-- **Tech:** R, astsa, tseries, forecast, bestNormalize
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/Time_Series_Project_task_1.html)
-- **Data:** [task1_data](https://github.com/karolkudlacik/karolkudlacik/blob/main/SWK-14.csv)
-  
 ### 📉 S&P 500 Market Risk Analysis – VaR, ES & Basel Backtesting
 
-- **Problem:** Problem: Quantify the downside market risk of the S&P 500 index using industry-standard financial risk measures, and validate the model's reliability through regulatory backtesting — addressing the core challenge faced by financial institutions when sizing capital reserves.
-- **Approach:** Using daily S&P 500 closing prices from 1995 onwards, 1-day and 10-day simple returns were computed. A rolling 252-day Historical VaR (99%) was implemented with linear interpolation between tail observations. Expected Shortfall (ES) at 97.5% was then added as a deeper tail measure, averaging the worst 2.5% of outcomes (6.3 observations, with fractional weighting). Following the Basel III / FRTB Internal Models Approach, a stress period was identified by scanning all possible 252-day windows to find the episode with the highest ES — anchoring the IMA capital charge as max(Stress ES, Recent ES). Finally, a regime-based simulated return series (GFC, COVID crash, elevated vol periods) was used for Basel Traffic Light backtesting, counting VaR breaches in the most recent 250-day window and assigning a GREEN/AMBER/RED classification with the corresponding capital multiplier.
-- **Result:** The analysis produced rolling VaR and ES curves, breach rates, and a full IMA charge comparison table across 1-day and 10-day horizons. The stress period (automatically identified as the worst historical window) served as the binding capital constraint. The backtesting framework output a traffic light status and Basel k-multiplier addition, mirroring real regulatory reporting logic.
+- **Problem:** Quantify the downside market risk of the S&P 500 index using industry-standard risk measures, and validate the model's reliability through regulatory backtesting — the core challenge financial institutions face when sizing capital reserves.
+- **Approach:** Using daily S&P 500 closing prices from 1995 onwards, 1-day and 10-day simple returns were computed. A rolling 252-day Historical VaR (99%) was implemented with linear interpolation between tail observations. Expected Shortfall (ES) at 97.5% was then added as a deeper tail measure, averaging the worst 2.5% of outcomes (6.3 observations, with fractional weighting). Following the Basel III / FRTB Internal Models Approach, a stress period was identified by scanning all possible 252-day windows to find the episode with the highest ES — anchoring the IMA capital charge as max(Stress ES, Recent ES). Finally, a regime-based simulated return series (GFC, COVID crash, elevated-vol periods) was used for Basel Traffic Light backtesting, counting VaR breaches in the most recent 250-day window and assigning a GREEN/AMBER/RED classification with the corresponding capital multiplier.
+- **Result:** The analysis produced rolling VaR and ES curves, breach rates, and a full IMA charge comparison table across 1-day and 10-day horizons. The automatically identified stress period served as the binding capital constraint, and the backtesting framework output a traffic-light status and Basel k-multiplier add-on, mirroring real regulatory reporting logic.
+- **Limitations:** Historical-simulation VaR is sensitive to the look-back window (ghosting effect) and applies no volatility scaling; 10-day overlapping returns introduce autocorrelation; and the traffic-light test here runs on simulated stress regimes rather than realized P&L.
 - **Tech:** R, zoo, dplyr
 - **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/SP500_analysis.html)
-- **Data:**[SP500_Data](https://stooq.pl/q/d/l/?s=^spx&f=19900501&t=20260327&i=d)
+- **Data:** [S&P 500 daily prices — Stooq](https://stooq.pl/q/d/l/?s=^spx&f=19900501&t=20260327&i=d)
+
+### 🏦 Corporate Credit Risk – Probability of Default (PD)
+
+- **Problem:** Estimate the 12-month probability of default for a Middle-Market Wholesale corporate book and decide which modelling approach a risk function should actually deploy. The predictors here are not raw financials but six qualitative credit-expert opinion scores (market position, management quality, access to credit, profitability, short- and medium-term liquidity), recorded across several years per customer — a panel structure that makes naive row-level train/test splitting unsafe.
+- **Approach:** From ~5,800 firm-year assessments (2000–2008), empty export-artefact rows were dropped and two customer-history features engineered (cumulative assessments and prior defaults). To prevent leakage in the panel, the train/test split was performed by customer (GroupShuffleSplit) rather than by row, so no client appears on both sides. Each predictor was supervised-binned to its Weight of Evidence on the training set only, screened by Information Value (keeping IV > 0.1) and pruned for multicollinearity above 0.75 (replicating caret::findCorrelation). Three model families were fitted on the WoE features — logistic regression, probit, and a linear probability model — and benchmarked against the credit experts' fixed scorecard, PD = 1 / (1 + exp(-0.1 × Score)), with the weights specified in the brief. Discrimination was assessed via AUC/Gini and the Kolmogorov–Smirnov statistic with a paired bootstrap confidence interval, parsimony via AIC/BIC, and a segmentation analysis by financial-holding type compared one overall model against two bespoke models.
+- **Result:** Logistic and probit were statistically indistinguishable — the 95% bootstrap interval for their Gini difference contained zero — so the logit was retained for its log-odds interpretability and regulatory familiarity. The linear probability model was rejected because a large share of its fitted probabilities fell outside [0, 1], and the experts' scorecard proved both badly miscalibrated (mean PD ≈ 0.99 against an observed default rate ≈ 0.11) and inverted in its ranking. The notebook outputs a full model-comparison table with ROC and bootstrap-CI Gini plots, mirroring how a model-validation report is structured. The very high headline discrimination (Gini ≈ 0.94) reflects the expert-assessment nature of this learning dataset rather than production-grade performance.
+- **Limitations:** Because the six predictors are expert risk opinions already strongly aligned with the eventual default, they behave as near-leaking overlays — the probit's quasi-separation warning is a direct symptom — so discrimination is inflated relative to a real corporate-PD model (typically Gini ≈ 0.4–0.7). Validation is also in-sample in time: there is no out-of-time split or Population Stability Index (PSI) check across years, and the panel is thin (most customers appear only once or twice). A production build would rebuild on raw financial ratios and add through-the-cycle stability testing.
+- **Tech:** Python, scorecardpy, statsmodels, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn
+- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_risk_pd.ipynb)
+- **Data:** HSBC Quants Academy – Project 2 (Corporate Credit Risk); corporate credit assessments, 2000–2008
+
+### 📈 Credit Card Approval Prediction
+
+- **Problem:** Financial institutions face challenges in automating credit card approval decisions while balancing two competing goals: minimizing risk by rejecting unreliable applicants, and maximizing profit by not turning away creditworthy ones. The dataset was highly imbalanced (~99.5% approvals), making standard classification approaches insufficient.
+- **Approach:** Built and compared five classification models — Logistic Regression, SVM, Decision Tree, Random Forest, and a Neural Network. The preprocessing pipeline included one-hot encoding of categorical features, StandardScaler normalization (applied separately to train/test to prevent data leakage), and SMOTETomek resampling to address class imbalance. Hyperparameter tuning was performed via RandomizedSearchCV for the traditional models and manual grid search for the neural network. Models were evaluated using Precision, F1-score, and AUC-ROC.
+- **Result:** Logistic Regression and SVM produced the highest AUC-ROC scores (close to 1.0), while Decision Tree and Random Forest performed well but were sensitive to hyperparameter choices. The Neural Network — despite architectural improvements (BatchNormalization, Dropout, L2 regularization) — was outperformed by the simpler models, confirming that classical ML can be more effective on structured tabular data. These near-ceiling scores largely reflect the relative simplicity of this learning dataset rather than production-grade performance.
+- **Tech:** Python, TensorFlow/Keras, Scikit-learn, Imbalanced-learn (SMOTETomek), Pandas, NumPy, Matplotlib, Seaborn
+- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_card_project.ipynb)
+- **Data:** [Kaggle – Application Data](https://www.kaggle.com/datasets/caesarmario/application-data)
+
+### 📈 Time Series – Monthly Sales Forecasting
+
+- **Problem:** Given monthly product sales data from 2015 onwards, the goal was to analyze the temporal structure of the series and produce reliable forecasts for the first three quarters of 2026 (Jan–Sep).
+- **Approach:** The raw series was tested for stationarity using the Augmented Dickey-Fuller test (p = 0.84 → non-stationary), then first-differenced to achieve stationarity (p = 0.01). ACF/PACF plots of the differenced series suggested an AR process, guiding model selection. A periodogram and a smoothed spectral density estimator (Daniell kernel) identified a dominant cycle of ~16 months. Four ARIMA candidates were fitted and compared — ARIMA(1,1,0), ARIMA(1,2,0), ARIMA(2,1,0), and ARIMA(2,2,0) — with selection based on AIC/BIC and residual diagnostics. ARIMA(2,1,0) was chosen, avoiding over-differencing while achieving the lowest information criteria.
+- **Result:** The ARIMA(2,1,0) model produced a 9-month forecast for Jan–Sep 2026, revealing a continuing gradual decline in sales (from ~1582 in January to ~1432 in September), with widening prediction intervals reflecting growing uncertainty further into the future.
+- **Note:** The same toolkit (stationarity testing, ARIMA, residual diagnostics) transfers directly to modelling financial returns and volatility.
+- **Tech:** R, astsa, tseries, forecast, bestNormalize
+- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/Time_Series_Project_task_1.html)
+- **Data:** [Monthly sales data (CSV)](https://github.com/karolkudlacik/karolkudlacik/blob/main/SWK-14.csv)
+
 ---
 
 ## 🛠️ Technical Stack
 
 **Languages:** Python, R
 
-**ML & Data Science:** TensorFlow, PyTorch, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn
+**ML & Data Science:** TensorFlow/Keras, Scikit-learn, Imbalanced-learn, Pandas, NumPy, Matplotlib, Seaborn
 
-**Finance & Quantitative:** Time Series Analysis, Risk Modeling, Statistical Analysis
+**R packages:** astsa, tseries, forecast, zoo, dplyr, bestNormalize
+
+**Finance & Quantitative:** Market risk (VaR, Expected Shortfall), Basel III / FRTB backtesting, credit risk modelling, time-series analysis, statistical analysis
 
 ---
 
 ## 📬 Connect
 
-📧 Email: karol.kudlacik@outlook.com
-🔗 LinkedIn: www.linkedin.com/in/karol-kudłacik-56abb13b9
-🐙 GitHub: https://github.com/karolkudlacik/karolkudlacik
+📧 **Email:** [karol.kudlacik@outlook.com](mailto:karol.kudlacik@outlook.com)  
+🔗 **LinkedIn:** [linkedin.com/in/karol-kudlacik](https://www.linkedin.com/in/karol-kudlacik)  
+🐙 **GitHub:** [github.com/karolkudlacik](https://github.com/karolkudlacik)
