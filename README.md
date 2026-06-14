@@ -26,7 +26,7 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Limitations:** Because the six predictors are expert risk opinions already strongly aligned with the eventual default, they behave as near-leaking overlays — the probit's quasi-separation warning is a direct symptom — so discrimination is inflated relative to a real corporate-PD model (typically Gini ≈ 0.4–0.7). Validation is also in-sample in time: there is no out-of-time split or Population Stability Index (PSI) check across years, and the panel is thin (most customers appear only once or twice). A production build would rebuild on raw financial ratios and add through-the-cycle stability testing.
 - **Tech:** Python, scorecardpy, statsmodels, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn
 - **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_risk_pd.ipynb)
-- **Data:** HSBC Quants Academy – Project 2 (Corporate Credit Risk); corporate credit assessments, 2000–2008
+- **Data:** HSBC Quants Academy – Project 2 (Corporate Credit Risk); corporate credit assessments, name: credit-risk_data.xls
 
 ### 📈 Credit Card Approval Prediction
 
