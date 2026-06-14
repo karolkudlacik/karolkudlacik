@@ -25,7 +25,8 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Result:** Buy & Hold won nominally only in the strong bull market (CAGR 15.8% vs 11.0%) — the Wheel caps upside — but with a worse risk profile (Sharpe 0.74 vs 1.19, deeper drawdowns). The Wheel outperformed in the bear (P = 87%) and sideways (P = 71%) regimes and showed consistently lighter left tails (better CVaR) across all three. In short, it acts as a volatility-management overlay: a more defensive, predictable payoff in exchange for capped upside, with the VRP as the structural source of edge.
 - **Limitations:** GBM has no fat tails, so crash / black-swan risk is understated; transaction costs are omitted, which favours the higher-turnover Wheel; perfect liquidity at Black–Scholes + VRP is assumed; and the edge is sensitive to the flat +2% VRP, which in reality varies and can turn negative in stress.
 - **Tech:** Python: numpy, scipy.stats
-- **Repository:** [View Presentation (PDF)](https://github.com/karolkudlacik/karolkudlacik/blob/main/Options_strategy_wheel_vs_Buy_paper_from_kkmf.pdf)
+- **Repository:** [View Presentation (PDF)](https://github.com/karolkudlacik/karolkudlacik/blob/main/Options_strategy_wheel_vs_Buy_paper_from_kkmf.pdf) (PL)
+                  [View code (python notebook)]) (PL)
 - **Data:** Synthetic (Monte Carlo / GBM simulation)
 
 ### 🏦 Corporate Credit Risk – Probability of Default (PD)
