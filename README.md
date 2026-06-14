@@ -26,7 +26,7 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Limitations:** GBM has no fat tails, so crash / black-swan risk is understated; transaction costs are omitted, which favours the higher-turnover Wheel; perfect liquidity at Black–Scholes + VRP is assumed; and the edge is sensitive to the flat +2% VRP, which in reality varies and can turn negative in stress.
 - **Tech:** Python: numpy, scipy.stats
 - **Repository:** [View Presentation (PDF)](https://github.com/karolkudlacik/karolkudlacik/blob/main/Options_strategy_wheel_vs_Buy_paper_from_kkmf.pdf) (PL)
-                  [View code (python notebook)]) (PL)
+                  [View code (python notebook)](https://github.com/karolkudlacik/karolkudlacik/blob/main/PL_wheel_strategy_paper.ipynb) (PL)
 - **Data:** Synthetic (Monte Carlo / GBM simulation)
 
 ### 🏦 Corporate Credit Risk – Probability of Default (PD)
