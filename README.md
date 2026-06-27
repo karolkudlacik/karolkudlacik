@@ -8,6 +8,26 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 
 ## 📊 Featured Projects
 
+### 🏦 Bank Probability of Default (PD) – Scorecard, XGBoost & Explainable AI
+
+- **Problem:** Banks and their regulators need a borrower-level Probability of Default (PD) to rank, price and provision for credit risk. In a regulated setting that model cannot be a pure black box — it must be accurate, well-calibrated, stable over time, and explainable enough to satisfy internal model-risk governance and supervisors. The task is to deliver both a transparent regulatory scorecard and a higher-performance challenger, and then show which one a risk function should actually deploy.
+- **Approach:** A full credit-risk modelling lifecycle on a panel of ~35,000 bank-year observations (26 financial-ratio features, ~2.8% default rate). After exploratory analysis of default rates by year and region and data-quality treatment, predictors were Weight-of-Evidence (WoE) transformed and selected via Information Value, correlation and VIF — every transformation fit on the training set only, with a fixed seed for reproducibility. Two paradigms were then built and compared: an interpretable logistic / probit scorecard and an XGBoost challenger (tuned with RandomizedSearchCV + early stopping), interpreted with SHAP. The models were stress-tested on the 2007–2009 financial crisis as an out-of-time validation and checked for population stability (PSI).
+- **Result:** XGBoost gave the strongest discrimination (test AUC ≈ 0.86 / Gini ≈ 0.72), with the logistic and probit scorecards close behind (AUC ≈ 0.84) and a shallow decision tree weakest (≈ 0.70) — a concrete illustration of the interpretability ↔ performance trade-off. The scorecard generalized best (smallest train–test gap) while XGBoost, though more accurate, overfit more. Both models stayed well-calibrated against the realized default rate across regions and years and retained discriminatory power through the 2007–2009 crisis even when trained only on pre-crisis data, and the Population Stability Index stayed below the 0.10 "stable" threshold. The final logistic model was converted into a deployable points scorecard. Recommended deployment: the transparent WoE + logistic scorecard as the defensible primary model, XGBoost as a challenger/benchmark, and SHAP for explainability.
+- **Limitations:** The out-of-time validation rests on a single historical stress window (2007–2009); the XGBoost challenger's larger train–test gap flags an overfitting risk that would need monitoring in production; and a full production build would add ongoing recalibration and broader through-the-cycle testing.
+- **Tech:** Python, scorecardpy, statsmodels, XGBoost, SHAP, Scikit-learn, SciPy, Pandas, NumPy, Matplotlib, Seaborn
+- **Repository:** [View Project](https://github.com/karolkudlacik/credit-risk-analysis/blob/main/credit_risk_explainable_ai.ipynb)
+- **Data:** Panel of ~35,000 bank-year observations (26 financial-ratio features, ~2.8% default rate)
+
+### 🏢 Corporate Credit Risk – Probability of Default (PD)
+
+- **Problem:** Estimate the 12-month probability of default for a Middle-Market Wholesale corporate book and decide which modelling approach a risk function should actually deploy. The predictors here are not raw financials but six qualitative credit-expert opinion scores (market position, management quality, access to credit, profitability, short- and medium-term liquidity), recorded across several years per customer — a panel structure that makes naive row-level train/test splitting unsafe.
+- **Approach:** From ~5,800 firm-year assessments (2000–2008), empty export-artefact rows were dropped and two customer-history features engineered (cumulative assessments and prior defaults). To prevent leakage in the panel, the train/test split was performed by customer (GroupShuffleSplit) rather than by row, so no client appears on both sides. Each predictor was supervised-binned to its Weight of Evidence on the training set only, screened by Information Value (keeping IV > 0.1) and pruned for multicollinearity above 0.75 (replicating caret::findCorrelation). Three model families were fitted on the WoE features — logistic regression, probit, and a linear probability model — and benchmarked against the credit experts' fixed scorecard, PD = 1 / (1 + exp(-0.1 × Score)), with the weights specified in the brief. Discrimination was assessed via AUC/Gini and the Kolmogorov–Smirnov statistic with a paired bootstrap confidence interval, parsimony via AIC/BIC, and a segmentation analysis by financial-holding type compared one overall model against two bespoke models.
+- **Result:** Logistic and probit were statistically indistinguishable — the 95% bootstrap interval for their Gini difference contained zero — so the logit was retained for its log-odds interpretability and regulatory familiarity. The linear probability model was rejected because a large share of its fitted probabilities fell outside [0, 1], and the experts' scorecard proved both badly miscalibrated (mean PD ≈ 0.99 against an observed default rate ≈ 0.11) and inverted in its ranking. The notebook outputs a full model-comparison table with ROC and bootstrap-CI Gini plots, mirroring how a model-validation report is structured. The very high headline discrimination (Gini ≈ 0.94) reflects the expert-assessment nature of this learning dataset rather than production-grade performance.
+- **Limitations:** Because the six predictors are expert risk opinions already strongly aligned with the eventual default, they behave as near-leaking overlays — the probit's quasi-separation warning is a direct symptom — so discrimination is inflated relative to a real corporate-PD model (typically Gini ≈ 0.4–0.7). Validation is also in-sample in time: there is no out-of-time split or Population Stability Index (PSI) check across years, and the panel is thin (most customers appear only once or twice). A production build would rebuild on raw financial ratios and add through-the-cycle stability testing.
+- **Tech:** Python, scorecardpy, statsmodels, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn
+- **Repository:** [View Project](https://github.com/karolkudlacik/credit-risk-analysis/blob/main/credit_risk_pd.ipynb)
+- **Data:** HSBC Quants Academy – Project 2 (Corporate Credit Risk); corporate credit assessments, name: credit-risk_data.xls
+
 ### 📉 S&P 500 Market Risk Analysis – VaR, ES & Basel Backtesting
 
 - **Problem:** Quantify the downside market risk of the S&P 500 index using industry-standard risk measures, and validate the model's reliability through regulatory backtesting — the core challenge financial institutions face when sizing capital reserves.
@@ -15,7 +35,7 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Result:** The analysis produced rolling VaR and ES curves, breach rates, and a full IMA charge comparison table across 1-day and 10-day horizons. The automatically identified stress period served as the binding capital constraint, and the backtesting framework output a traffic-light status and Basel k-multiplier add-on, mirroring real regulatory reporting logic.
 - **Limitations:** Historical-simulation VaR is sensitive to the look-back window (ghosting effect) and applies no volatility scaling; 10-day overlapping returns introduce autocorrelation; and the traffic-light test here runs on simulated stress regimes rather than realized P&L.
 - **Tech:** R, zoo, dplyr
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/SP500_analysis.html)
+- **Repository:** [View Project](https://github.com/karolkudlacik/S-P-500-Market-Risk-Analysis-VaR-ES-Basel-Backtesting)
 - **Data:** [S&P 500 daily prices — Stooq](https://stooq.pl/q/d/l/?s=^spx&f=19900501&t=20260327&i=d)
 
 ### 🎲 Options Wheel vs. Buy & Hold – Monte Carlo Strategy Comparison
@@ -25,19 +45,8 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Result:** Buy & Hold won nominally only in the strong bull market (CAGR 15.8% vs 11.0%) — the Wheel caps upside — but with a worse risk profile (Sharpe 0.74 vs 1.19, deeper drawdowns). The Wheel outperformed in the bear (P = 87%) and sideways (P = 71%) regimes and showed consistently lighter left tails (better CVaR) across all three. In short, it acts as a volatility-management overlay: a more defensive, predictable payoff in exchange for capped upside, with the VRP as the structural source of edge.
 - **Limitations:** GBM has no fat tails, so crash / black-swan risk is understated; transaction costs are omitted, which favours the higher-turnover Wheel; perfect liquidity at Black–Scholes + VRP is assumed; and the edge is sensitive to the flat +2% VRP, which in reality varies and can turn negative in stress.
 - **Tech:** Python: numpy, scipy.stats
-- **Repository:** [View Presentation (PDF)](https://github.com/karolkudlacik/karolkudlacik/blob/main/Options_strategy_wheel_vs_Buy_paper_from_kkmf.pdf) (PL)
-                  [View code (python notebook)](https://github.com/karolkudlacik/karolkudlacik/blob/main/PL_wheel_strategy_paper.ipynb) (PL)
+- **Repository:** [View Project](https://github.com/karolkudlacik/Options-Wheel-vs.-Buy-Hold-Monte-Carlo-Strategy-Comparison)
 - **Data:** Synthetic (Monte Carlo / GBM simulation)
-
-### 🏦 Corporate Credit Risk – Probability of Default (PD)
-
-- **Problem:** Estimate the 12-month probability of default for a Middle-Market Wholesale corporate book and decide which modelling approach a risk function should actually deploy. The predictors here are not raw financials but six qualitative credit-expert opinion scores (market position, management quality, access to credit, profitability, short- and medium-term liquidity), recorded across several years per customer — a panel structure that makes naive row-level train/test splitting unsafe.
-- **Approach:** From ~5,800 firm-year assessments (2000–2008), empty export-artefact rows were dropped and two customer-history features engineered (cumulative assessments and prior defaults). To prevent leakage in the panel, the train/test split was performed by customer (GroupShuffleSplit) rather than by row, so no client appears on both sides. Each predictor was supervised-binned to its Weight of Evidence on the training set only, screened by Information Value (keeping IV > 0.1) and pruned for multicollinearity above 0.75 (replicating caret::findCorrelation). Three model families were fitted on the WoE features — logistic regression, probit, and a linear probability model — and benchmarked against the credit experts' fixed scorecard, PD = 1 / (1 + exp(-0.1 × Score)), with the weights specified in the brief. Discrimination was assessed via AUC/Gini and the Kolmogorov–Smirnov statistic with a paired bootstrap confidence interval, parsimony via AIC/BIC, and a segmentation analysis by financial-holding type compared one overall model against two bespoke models.
-- **Result:** Logistic and probit were statistically indistinguishable — the 95% bootstrap interval for their Gini difference contained zero — so the logit was retained for its log-odds interpretability and regulatory familiarity. The linear probability model was rejected because a large share of its fitted probabilities fell outside [0, 1], and the experts' scorecard proved both badly miscalibrated (mean PD ≈ 0.99 against an observed default rate ≈ 0.11) and inverted in its ranking. The notebook outputs a full model-comparison table with ROC and bootstrap-CI Gini plots, mirroring how a model-validation report is structured. The very high headline discrimination (Gini ≈ 0.94) reflects the expert-assessment nature of this learning dataset rather than production-grade performance.
-- **Limitations:** Because the six predictors are expert risk opinions already strongly aligned with the eventual default, they behave as near-leaking overlays — the probit's quasi-separation warning is a direct symptom — so discrimination is inflated relative to a real corporate-PD model (typically Gini ≈ 0.4–0.7). Validation is also in-sample in time: there is no out-of-time split or Population Stability Index (PSI) check across years, and the panel is thin (most customers appear only once or twice). A production build would rebuild on raw financial ratios and add through-the-cycle stability testing.
-- **Tech:** Python, scorecardpy, statsmodels, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_risk_pd.ipynb)
-- **Data:** HSBC Quants Academy – Project 2 (Corporate Credit Risk); corporate credit assessments, name: credit-risk_data.xls
 
 ### 📈 Credit Card Approval Prediction
 
@@ -45,7 +54,7 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Approach:** Built and compared five classification models — Logistic Regression, SVM, Decision Tree, Random Forest, and a Neural Network. The preprocessing pipeline included one-hot encoding of categorical features, StandardScaler normalization (applied separately to train/test to prevent data leakage), and SMOTETomek resampling to address class imbalance. Hyperparameter tuning was performed via RandomizedSearchCV for the traditional models and manual grid search for the neural network. Models were evaluated using Precision, F1-score, and AUC-ROC.
 - **Result:** Logistic Regression and SVM produced the highest AUC-ROC scores (close to 1.0), while Decision Tree and Random Forest performed well but were sensitive to hyperparameter choices. The Neural Network — despite architectural improvements (BatchNormalization, Dropout, L2 regularization) — was outperformed by the simpler models, confirming that classical ML can be more effective on structured tabular data. These near-ceiling scores largely reflect the relative simplicity of this learning dataset rather than production-grade performance.
 - **Tech:** Python, TensorFlow/Keras, Scikit-learn, Imbalanced-learn (SMOTETomek), Pandas, NumPy, Matplotlib, Seaborn
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/credit_card_project.ipynb)
+- **Repository:** [View Project](https://github.com/karolkudlacik/credit-risk-analysis/blob/main/credit_card_project.ipynb)
 - **Data:** [Kaggle – Application Data](https://www.kaggle.com/datasets/caesarmario/application-data)
 
 ### 📈 Time Series – Monthly Sales Forecasting
@@ -55,8 +64,8 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 - **Result:** The ARIMA(2,1,0) model produced a 9-month forecast for Jan–Sep 2026, revealing a continuing gradual decline in sales (from ~1582 in January to ~1432 in September), with widening prediction intervals reflecting growing uncertainty further into the future.
 - **Note:** The same toolkit (stationarity testing, ARIMA, residual diagnostics) transfers directly to modelling financial returns and volatility.
 - **Tech:** R, astsa, tseries, forecast, bestNormalize
-- **Repository:** [View Project](https://github.com/karolkudlacik/karolkudlacik/blob/main/Time_Series_Project_task_1.html)
-- **Data:** [Monthly sales data (CSV)](https://github.com/karolkudlacik/karolkudlacik/blob/main/SWK-14.csv)
+- **Repository:** [View Project](https://github.com/karolkudlacik/Time-series-analysis-project)
+- **Data:** [Monthly sales data (SWK-14.csv)](https://github.com/karolkudlacik/Time-series-analysis-project)
 
 ---
 
@@ -64,11 +73,11 @@ Applied Mathematics Student · Aspiring Quantitative / Risk Analyst
 
 **Languages:** Python, R
 
-**ML & Data Science:** Scikit-learn, Imbalanced-learn, Pandas, NumPy, Matplotlib, Seaborn, scorecardpy
+**ML & Data Science:** Scikit-learn, XGBoost, SHAP, statsmodels, Imbalanced-learn, Pandas, NumPy, Matplotlib, Seaborn, scorecardpy
 
 **R packages:** astsa, tseries, forecast, zoo, dplyr, bestNormalize
 
-**Finance & Quantitative:** Market risk (VaR, Expected Shortfall), Basel III / FRTB backtesting, PD, credit risk modelling, time-series analysis, statistical analysis
+**Finance & Quantitative:** Market risk (VaR, Expected Shortfall), Basel III / FRTB backtesting, PD / credit-risk modelling, model validation (WoE scorecards, calibration, out-of-time testing, PSI), time-series analysis, statistical & econometric inference
 
 ---
 
